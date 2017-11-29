@@ -2,7 +2,7 @@ subroutine mandel_set8(xmin, xmax, ymin, ymax, width, height, itermax, n)
     real(8), intent(in)   :: xmin, xmax, ymin, ymax
     integer, intent(in)   :: width, height, itermax
     integer               :: niter
-    integer, dimension(width, height), intent(out) :: n
+    integer, dimension(height, width), intent(out) :: n
     integer               :: x, y
     real(8)               :: xstep, ystep
     
