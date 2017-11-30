@@ -12,7 +12,7 @@ def mandel9(c,maxiter):
         real = nreal;
         if real * real + imag * imag > 4.0:
             return n
-    return 0
+    return n
 
 @guvectorize([(complex64[:], int32[:], int32[:])], '(n),()->(n)',target='parallel')
 def mandel9v(c, maxit, output):

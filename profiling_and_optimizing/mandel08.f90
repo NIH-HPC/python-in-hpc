@@ -33,7 +33,6 @@ subroutine mandel8(cre, cim, itermax, n)
         im = 2 * re * im + cim
         re = re2 - im2 + cre
     end do
-    if (n == itermax) n = 0
 end subroutine mandel8
         
 
