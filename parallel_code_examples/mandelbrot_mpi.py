@@ -62,11 +62,11 @@ def mandel(creal, cimag, maxiter):
 def mandel_set(xmin, xmax, ymin, ymax, width, height, maxiter):
     r = np.linspace(xmin, xmax, width)
     i = np.linspace(ymin, ymax, height)
-    n = np.empty((height, width), dtype='i')
+    Cm = np.empty((height, width), dtype='i')
     for x in range(width):
         for y in range(height):
-            n[y, x] = mandel(r[x], i[y], maxiter)
-    return n
+            Cm[y, x] = mandel(r[x], i[y], maxiter)
+    return Cm 
 
 ###
 ### main
@@ -90,7 +90,6 @@ N = np.array(N, dtype='i')  # so we can Gather it later on
 
 # first row to compute here
 #   scan: the operation returns for each rank i the sum of send buffers of ranks [0,i]
-#   nifty!
 # start_y and end_y are the first and last y value to calculate in this block
 start_i = comm.scan(N) - N
 start_y = ymin + start_i * dy
@@ -102,9 +101,10 @@ Cl = mandel_set(xmin, xmax, start_y, end_y, width, N, maxiter)
 print "Rank {:4d}: finished computing rows; result matrix is shape {}".format(rank, Cl.shape)
 print "Rank {:4d}: max value in array: {}".format(rank, Cl.max())
 
-# gather the number of rows calculated by each rank. returns a list
-# note this is the lower case 'gather' used for python objects (slow)
-# though in this case the data set is tiny and it wouldn't have mattered
+# gather the number of rows calculated by each rank. Note that the N of each rank
+# was wrapped in a numpy array so here the upper case 'Gather' can be used. This
+# is faster than using the lower case 'gather' which is meant for python objects.
+# Though this is tiny data so it would not have mattered.
 rowcounts = 0     # has to be zero, not None b/c of the 'rowcounts * width' bit later on
 C         = None
 if rank == 0:
