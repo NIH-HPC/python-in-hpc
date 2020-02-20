@@ -4,14 +4,11 @@ calculates a mandel set using block distribution - i.e.
     rank 0 calulates lines [0,n1[
     rank 1                 [n1,n2[
 
-Run with
-    mpiexec [mpiexec otions] ./mandelbrot_mpi.py
-
 This code was developed with
-   mpi4py                    2.0.0 
-   numba                     0.35.0
-   numpy                     1.11.3
-   python                    2.7.13
+    mpi4py       3.0.3
+    numba        0.40.0
+    numpy        1.16.2
+    python       3.6.10
 """
 
 ###
