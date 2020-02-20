@@ -18,9 +18,9 @@ This code was developed with
 ### imports
 ###
 
-from mpi4py import MPI
 import numpy as np
 from numba import jit
+from mpi4py import MPI
 
 tic = MPI.Wtime()
 
@@ -76,7 +76,7 @@ comm  = MPI.COMM_WORLD
 size  = comm.Get_size()
 rank  = comm.Get_rank()
 
-print "Rank {:4d}: checking in".format(rank)
+print("Rank {:4d}: checking in".format(rank))
 
 # how many rows to compute in this rank?
 #   for example: height 100
@@ -85,7 +85,7 @@ print "Rank {:4d}: checking in".format(rank)
 #   which means that ranks 0 - 3 each do one
 #   more row (13) than ranks 4 - 7 (12)
 N = height // size + (height % size > rank)
-print "Rank {}: will compute {} rows".format(rank, N)
+print("Rank {}: will compute {} rows".format(rank, N))
 N = np.array(N, dtype='i')  # so we can Gather it later on
 
 # first row to compute here
@@ -94,12 +94,12 @@ N = np.array(N, dtype='i')  # so we can Gather it later on
 start_i = comm.scan(N) - N
 start_y = ymin + start_i * dy
 end_y   = ymin + (start_i + N - 1) * dy
-print "Rank {:4d}: will compute y = [{}, {}]".format(rank, start_y, end_y)
+print("Rank {:4d}: will compute y = [{}, {}]".format(rank, start_y, end_y))
 
 # calculate the local results
 Cl = mandel_set(xmin, xmax, start_y, end_y, width, N, maxiter)
-print "Rank {:4d}: finished computing rows; result matrix is shape {}".format(rank, Cl.shape)
-print "Rank {:4d}: max value in array: {}".format(rank, Cl.max())
+print("Rank {:4d}: finished computing rows; result matrix is shape {}".format(rank, Cl.shape))
+print("Rank {:4d}: max value in array: {}".format(rank, Cl.max()))
 
 # gather the number of rows calculated by each rank. Note that the N of each rank
 # was wrapped in a numpy array so here the upper case 'Gather' can be used. This
@@ -132,11 +132,11 @@ toc = MPI.Wtime()
 wct = comm.gather(toc - tic, root=0)
 if rank == 0:
     for task, time in enumerate(wct):
-        print "Rank {:4d}: ran for {:8.2f}s".format(task, time)
-    print "max(runtime)  = {:8.2f}s".format(max(wct))
-    print "min(runtime ) = {:8.2f}s".format(min(wct))
-    print "mean(runtime) = {:8.2f}s".format(sum(wct) / len(wct))
-    print "Array size: {} x {}".format(height, width)
+        print("Rank {:4d}: ran for {:8.2f}s".format(task, time))
+    print("max(runtime)  = {:8.2f}s".format(max(wct)))
+    print("min(runtime ) = {:8.2f}s".format(min(wct)))
+    print("mean(runtime) = {:8.2f}s".format(sum(wct) / len(wct)))
+    print("Array size: {} x {}".format(height, width))
 
 # eye candy (requires matplotlib)
 if rank == 0 and width * height <= 1e7:
@@ -144,7 +144,7 @@ if rank == 0 and width * height <= 1e7:
         from matplotlib import pyplot as plt
         from matplotlib import colors
     except ImportError:
-        print ('No matplotlib found; skipping plot')
+        print('No matplotlib found; skipping plot')
     else:
         norm = colors.PowerNorm(0.3)
         figsz = max(width, height) / 100
